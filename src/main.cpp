@@ -32,6 +32,11 @@ void createObstacle(std::vector<Obstacle>& obstacles) {
     obstacles.push_back(obstacle);
 }
 
+bool checkCollision(const sf::CircleShape& bird, const Obstacle& obstacle) {
+    return bird.getGlobalBounds().intersects(obstacle.top.getGlobalBounds()) ||
+           bird.getGlobalBounds().intersects(obstacle.bottom.getGlobalBounds());
+}
+
 int main() {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
@@ -80,6 +85,14 @@ int main() {
         for (const auto& obstacle : obstacles) {
             window.draw(obstacle.top);
             window.draw(obstacle.bottom);
+        }
+
+        // Check for collisions
+        for (const auto& obstacle : obstacles) {
+            if (checkCollision(bird, obstacle)) {
+                // Collision detected, handle it (e.g., end the game, restart, etc.)
+                window.close();
+            }
         }
 
         window.display();
