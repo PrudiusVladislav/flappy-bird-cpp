@@ -69,6 +69,13 @@ void Game::update() {
     if (checkCollision()) {
         isGameOver = true;
     }
+
+    // check window bounds collision
+    const Vector& birdPosition = bird.getPosition();
+    const Vector& windowSize = renderer.getWindowSize();
+    if (birdPosition.y < 0 || birdPosition.y > windowSize.y || birdPosition.x < 0 || birdPosition.x > windowSize.x) {
+        isGameOver = true;
+    }
 }
 
 void Game::render() {
