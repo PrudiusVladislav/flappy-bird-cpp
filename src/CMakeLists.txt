@@ -8,6 +8,17 @@ FETCHCONTENT_MAKEAVAILABLE(SFML)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(src main.cpp)
+add_executable(src main.cpp
+        IRenderer.h
+        Bird.cpp
+        Bird.h
+        Obstacle.cpp
+        Obstacle.h
+        Game.cpp
+        Game.h
+        SfmlRenderer.cpp
+        SfmlRenderer.h
+        IGameStorage.h
+        FileGameStorage.h)
 
 target_link_libraries(src sfml-graphics sfml-window sfml-system)
