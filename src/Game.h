@@ -15,6 +15,12 @@
 
 const float OBSTACLE_SPAWN_TIME_S = 2.0f;
 
+enum GameState {
+    WAITING_TO_START,
+    PLAYING,
+    GAME_OVER
+};
+
 class Game {
 public:
     Game(IRenderer& renderer, IGameStorage& storage);
@@ -36,7 +42,7 @@ private:
     float birdVelocity;
     Clock clock;
     float obstacleSpawnTimeS = OBSTACLE_SPAWN_TIME_S;
-    bool isGameOver;
+    GameState gameState;
     int score;
 };
 

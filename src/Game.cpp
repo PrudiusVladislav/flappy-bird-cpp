@@ -17,12 +17,12 @@ Game::Game(IRenderer& renderer, IGameStorage& storage)
       storage(storage),
       bird({renderer.getWindowSize().x / 4, renderer.getWindowSize().y / 2}, Color::Yellow),
       birdVelocity(0.0f),
-      isGameOver(false) {
+      gameState(WAITING_TO_START) {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
 
 void Game::run() {
-    while (!isGameOver) {
+    while (gameState != GAME_OVER) {
         processInput();
         update();
         render();
@@ -34,14 +34,22 @@ void Game::processInput() {
     Event event;
     while (renderer.pollEvent(event)) {
         if (event.type == EventType::Closed)
-            isGameOver = true;
+            gameState = GAME_OVER;
         if (event.type == EventType::KeyPressed && event.key.code == Key::Space) {
-            bird.jump();
+            if (gameState == WAITING_TO_START) {
+                gameState = PLAYING;
+            } else {
+                bird.jump();
+            }
         }
     }
 }
 
 void Game::update() {
+    if (gameState == WAITING_TO_START) {
+        return;
+    }
+
     bird.update();
 
     if (clock.getElapsedTimeS() > obstacleSpawnTimeS) {
@@ -67,14 +75,14 @@ void Game::update() {
     }), obstacles.end());
 
     if (checkCollision()) {
-        isGameOver = true;
+        gameState = GAME_OVER;
     }
 
     // check window bounds collision
     const Vector& birdPosition = bird.getPosition();
     const Vector& windowSize = renderer.getWindowSize();
     if (birdPosition.y < 0 || birdPosition.y > windowSize.y || birdPosition.x < 0 || birdPosition.x > windowSize.x) {
-        isGameOver = true;
+        gameState = GAME_OVER;
     }
 }
 
